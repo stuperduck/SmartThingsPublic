@@ -74,21 +74,13 @@ metadata {
 			state "battery", label:'${currentValue}% battery', unit:""
 		}
 
-		//This tile is a temporary fix so users can select main tiles again
-		standardTile("CONVERTED-MULTI-device.status", "device.status", width: 4, height: 4) {
-			state "closed", label:'${name}', icon:"st.doors.garage.garage-closed", backgroundColor:"#79b821", nextState:"opening"
-			state "open", label:'${name}', icon:"st.doors.garage.garage-open", backgroundColor:"#ffa81e", nextState:"closing"
-			state "opening", label:'${name}', icon:"st.doors.garage.garage-opening", backgroundColor:"#ffe71e"
-			state "closing", label:'${name}', icon:"st.doors.garage.garage-closing", backgroundColor:"#ffe71e"
-		}
-
 		main(["status", "contact", "acceleration"])
 		details(["status", "contact", "acceleration", "temperature", "3axis", "battery"])
 	}
     
 	preferences {
-		input description: "This feature allows you to correct any temperature variations by selecting an offset. Ex: If your sensor consistently reports a temp that's 5 degrees too warm, you'd enter \"-5\". If 3 degrees too cold, enter \"+3\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
-		input "tempOffset", "number", title: "Temperature Offset", description: "Adjust temperature by this many degrees", range: "*..*", displayDuringSetup: false
+		input title: "Temperature Offset", description: "This feature allows you to correct any temperature variations by selecting an offset. Ex: If your sensor consistently reports a temp that's 5 degrees too warm, you'd enter \"-5\". If 3 degrees too cold, enter \"+3\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+		input "tempOffset", "number", title: "Degrees", description: "Adjust temperature by this many degrees", range: "*..*", displayDuringSetup: false
 	}    
 }
 

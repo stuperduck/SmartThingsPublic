@@ -28,6 +28,9 @@ metadata {
 		// indicates that device keeps track of heartbeat (in state.heartbeat)
 		attribute "heartbeat", "string"
 
+		fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0B04,0B05", outClusters: "0019", manufacturer: "CentraLite",  model: "3200", deviceJoinName: "Outlet"
+		fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0B04,0B05", outClusters: "0019", manufacturer: "CentraLite",  model: "3200-Sgb", deviceJoinName: "Outlet"
+		fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0B04,0B05", outClusters: "0019", manufacturer: "CentraLite",  model: "4257050-RZHAC", deviceJoinName: "Outlet"
 		fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0B04,0B05", outClusters: "0019"
 	}
 
@@ -40,6 +43,15 @@ metadata {
 		// reply messages
 		reply "zcl on-off on": "on/off: 1"
 		reply "zcl on-off off": "on/off: 0"
+	}
+
+	preferences {
+		section {
+			image(name: 'educationalcontent', multiple: true, images: [
+				"http://cdn.device-gse.smartthings.com/Outlet/US/OutletUS1.jpg",
+				"http://cdn.device-gse.smartthings.com/Outlet/US/OutletUS2.jpg"
+				])
+		}
 	}
 
 	// UI tile definitions

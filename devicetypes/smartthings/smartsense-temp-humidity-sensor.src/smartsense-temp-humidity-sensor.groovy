@@ -33,8 +33,8 @@ metadata {
 	}
 
 	preferences {
-		input description: "This feature allows you to correct any temperature variations by selecting an offset. Ex: If your sensor consistently reports a temp that's 5 degrees too warm, you'd enter \"-5\". If 3 degrees too cold, enter \"+3\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
-		input "tempOffset", "number", title: "Temperature Offset", description: "Adjust temperature by this many degrees", range: "*..*", displayDuringSetup: false
+		input title: "Temperature Offset", description: "This feature allows you to correct any temperature variations by selecting an offset. Ex: If your sensor consistently reports a temp that's 5 degrees too warm, you'd enter \"-5\". If 3 degrees too cold, enter \"+3\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+		input "tempOffset", "number", title: "Degrees", description: "Adjust temperature by this many degrees", range: "*..*", displayDuringSetup: false
 	}
 
 	tiles(scale: 2) {
@@ -60,20 +60,6 @@ metadata {
 		}
 		standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
-		}
-
-		//This tile is a temporary fix so users can select main tiles again
-		standardTile("CONVERTED-MULTI-device.temperature", "device.temperature", width: 4, height: 4) {
-			state "temperature", label:'${currentValue}°',
-				backgroundColors:[
-					[value: 31, color: "#153591"],
-					[value: 44, color: "#1e9cbb"],
-					[value: 59, color: "#90d2a7"],
-					[value: 74, color: "#44b621"],
-					[value: 84, color: "#f1d801"],
-					[value: 95, color: "#d04e00"],
-					[value: 96, color: "#bc2323"]
-				]
 		}
 
 		main "temperature", "humidity"
@@ -267,22 +253,19 @@ def configure() {
 
 	log.debug "Configuring Reporting and Bindings."
 	def configCmds = [
+		"zdo bind 0x${device.deviceNetworkId} 1 1 1 {${device.zigbeeId}} {}", "delay 500",
+		"zcl global send-me-a-report 1 0x20 0x20 30 21600 {01}",		//checkin time 6 hrs
+		"send 0x${device.deviceNetworkId} 1 1", "delay 500",
 
-
-        "zcl global send-me-a-report 1 0x20 0x20 600 3600 {0100}", "delay 500",
-        "send 0x${device.deviceNetworkId} 1 1", "delay 1000",
-
-        "zcl global send-me-a-report 0x402 0 0x29 300 3600 {6400}", "delay 200",
-        "send 0x${device.deviceNetworkId} 1 1", "delay 1500",
-
-        "zcl global send-me-a-report 0xFC45 0 0x29 300 3600 {6400}", "delay 200",
-        "send 0x${device.deviceNetworkId} 1 1", "delay 1500",
-
-        "zdo bind 0x${device.deviceNetworkId} 1 1 0xFC45 {${device.zigbeeId}} {}", "delay 1000",
 		"zdo bind 0x${device.deviceNetworkId} 1 1 0x402 {${device.zigbeeId}} {}", "delay 500",
-		"zdo bind 0x${device.deviceNetworkId} 1 1 1 {${device.zigbeeId}} {}"
+		"zcl global send-me-a-report 0x402 0 0x29 30 3600 {6400}",
+		"send 0x${device.deviceNetworkId} 1 1", "delay 500",
+
+		"zdo bind 0x${device.deviceNetworkId} 1 1 0xFC45 {${device.zigbeeId}} {}", "delay 500",
+		"zcl global send-me-a-report 0xFC45 0 0x29 30 3600 {6400}",
+		"send 0x${device.deviceNetworkId} 1 1", "delay 500"
 	]
-    return configCmds + refresh() // send refresh cmds as part of config
+	return configCmds + refresh() // send refresh cmds as part of config
 }
 
 private hex(value) {
